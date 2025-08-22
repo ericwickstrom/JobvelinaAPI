@@ -1,5 +1,6 @@
 using System.Reflection;
 using Jobvelina.Application.Interfaces;
+using Jobvelina.Application.Services;
 using Jobvelina.Persistence.Data;
 using Jobvelina.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -9,12 +10,22 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure Entity Framework with In-Memory database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseInMemoryDatabase("JobvelinaDb"));
+// Configuration flag to choose between mock and database service
+var useMockData = builder.Configuration.GetValue<bool>("UseMockData", true);
 
-// Register repositories
-builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+if (useMockData)
+{
+    // Use mock service for development/testing
+    builder.Services.AddSingleton<IJobApplicationRepository, MockJobApplicationService>();
+}
+else
+{
+    // Use Entity Framework with database
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseInMemoryDatabase("JobvelinaDb"));
+    
+    builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
+}
 
 // Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
