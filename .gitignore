@@ -592,3 +592,6 @@ logs/
 # Coverage reports
 coverage/
 TestResults/
+
+# Claude Code
+.claude/
