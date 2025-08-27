@@ -13,19 +13,29 @@ public class JobApplication
     public string Id { get; set; } = string.Empty;
 
     /// <summary>
-    /// Name of the company
+    /// Foreign key for the company
     /// </summary>
-    public string Company { get; set; } = string.Empty;
+    public string CompanyId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Navigation property for the company
+    /// </summary>
+    public Company Company { get; set; } = null!;
+
+    /// <summary>
+    /// Foreign key for the job platform
+    /// </summary>
+    public string JobPlatformId { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Navigation property for the job platform
+    /// </summary>
+    public JobPlatform JobPlatform { get; set; } = null!;
 
     /// <summary>
     /// Title of the job position
     /// </summary>
     public string JobTitle { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Platform where the application was submitted (e.g., LinkedIn, Indeed, etc.)
-    /// </summary>
-    public string Platform { get; set; } = string.Empty;
 
     /// <summary>
     /// Date when the application was created

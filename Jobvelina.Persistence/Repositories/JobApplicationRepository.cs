@@ -28,6 +28,8 @@ public class JobApplicationRepository : IJobApplicationRepository
     public async Task<IEnumerable<JobApplication>> GetAllAsync()
     {
         return await _context.JobApplications
+            .Include(ja => ja.Company)
+            .Include(ja => ja.JobPlatform)
             .Where(ja => !ja.IsDeleted)
             .OrderByDescending(ja => ja.CreateDate)
             .ToListAsync();
@@ -44,6 +46,8 @@ public class JobApplicationRepository : IJobApplicationRepository
             return null;
 
         return await _context.JobApplications
+            .Include(ja => ja.Company)
+            .Include(ja => ja.JobPlatform)
             .FirstOrDefaultAsync(ja => ja.Id == id && !ja.IsDeleted);
     }
 
@@ -86,9 +90,9 @@ public class JobApplicationRepository : IJobApplicationRepository
             throw new InvalidOperationException($"Job application with ID {jobApplication.Id} not found or has been deleted.");
 
         // Update properties
-        existingApplication.Company = jobApplication.Company;
+        existingApplication.CompanyId = jobApplication.CompanyId;
+        existingApplication.JobPlatformId = jobApplication.JobPlatformId;
         existingApplication.JobTitle = jobApplication.JobTitle;
-        existingApplication.Platform = jobApplication.Platform;
         existingApplication.Status = jobApplication.Status;
         existingApplication.Notes = jobApplication.Notes;
         existingApplication.ModifiedDate = DateTime.UtcNow;

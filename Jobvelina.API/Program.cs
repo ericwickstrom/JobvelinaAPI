@@ -10,6 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Configuration flag to choose between mock and database service
 var useMockData = builder.Configuration.GetValue<bool>("UseMockData", true);
 
@@ -20,9 +31,9 @@ if (useMockData)
 }
 else
 {
-    // Use Entity Framework with database
+    // Use Entity Framework with SQL Server LocalDB
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseInMemoryDatabase("JobvelinaDb"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
     
     builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
 }
@@ -66,6 +77,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowAll");
 
 app.UseAuthorization();
 
