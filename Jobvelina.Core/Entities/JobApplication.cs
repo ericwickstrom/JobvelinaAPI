@@ -10,12 +10,12 @@ public class JobApplication
     /// <summary>
     /// Unique identifier for the job application
     /// </summary>
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Foreign key for the company
     /// </summary>
-    public string CompanyId { get; set; } = string.Empty;
+    public Guid CompanyId { get; set; }
 
     /// <summary>
     /// Navigation property for the company
@@ -25,7 +25,7 @@ public class JobApplication
     /// <summary>
     /// Foreign key for the job platform
     /// </summary>
-    public string JobPlatformId { get; set; } = string.Empty;
+    public Guid JobPlatformId { get; set; }
 
     /// <summary>
     /// Navigation property for the job platform

@@ -71,14 +71,14 @@ public class JobApplicationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<JobApplicationDto>> GetJobApplication(string id)
+    public async Task<ActionResult<JobApplicationDto>> GetJobApplication(Guid id)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (id == Guid.Empty)
             {
-                _logger.LogWarning("GetJobApplication called with null or empty ID");
-                return BadRequest("Job application ID cannot be null or empty");
+                _logger.LogWarning("GetJobApplication called with empty ID");
+                return BadRequest("Job application ID cannot be empty");
             }
 
             _logger.LogInformation("Getting job application with ID: {Id}", id);
@@ -160,14 +160,14 @@ public class JobApplicationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<JobApplicationDto>> UpdateJobApplication(string id, UpdateJobApplicationDto updateJobApplicationDto)
+    public async Task<ActionResult<JobApplicationDto>> UpdateJobApplication(Guid id, UpdateJobApplicationDto updateJobApplicationDto)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (id == Guid.Empty)
             {
-                _logger.LogWarning("UpdateJobApplication called with null or empty ID");
-                return BadRequest("Job application ID cannot be null or empty");
+                _logger.LogWarning("UpdateJobApplication called with empty ID");
+                return BadRequest("Job application ID cannot be empty");
             }
 
             if (!ModelState.IsValid)
@@ -219,14 +219,14 @@ public class JobApplicationsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> DeleteJobApplication(string id)
+    public async Task<ActionResult> DeleteJobApplication(Guid id)
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(id))
+            if (id == Guid.Empty)
             {
-                _logger.LogWarning("DeleteJobApplication called with null or empty ID");
-                return BadRequest("Job application ID cannot be null or empty");
+                _logger.LogWarning("DeleteJobApplication called with empty ID");
+                return BadRequest("Job application ID cannot be empty");
             }
 
             _logger.LogInformation("Deleting job application with ID: {Id}", id);
@@ -288,8 +288,8 @@ public class JobApplicationsController : ControllerBase
         // or create new ones as needed
         return new JobApplication
         {
-            CompanyId = "comp-001", // Placeholder - would be looked up or created
-            JobPlatformId = "plat-001", // Placeholder - would be looked up or created
+            CompanyId = new Guid("11111111-1111-1111-1111-111111111111"), // Placeholder - would be looked up or created
+            JobPlatformId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), // Placeholder - would be looked up or created
             JobTitle = createDto.JobTitle,
             Status = createDto.Status,
             Notes = createDto.Notes
@@ -302,7 +302,7 @@ public class JobApplicationsController : ControllerBase
     /// <param name="updateDto">The update DTO</param>
     /// <param name="id">The job application ID</param>
     /// <returns>The job application entity</returns>
-    private static JobApplication MapFromUpdateDto(UpdateJobApplicationDto updateDto, string id)
+    private static JobApplication MapFromUpdateDto(UpdateJobApplicationDto updateDto, Guid id)
     {
         // For simplicity in this Entity Framework setup, we'll use placeholder IDs
         // In a real application, you would look up existing companies and platforms
@@ -310,8 +310,8 @@ public class JobApplicationsController : ControllerBase
         return new JobApplication
         {
             Id = id,
-            CompanyId = "comp-001", // Placeholder - would be looked up or created
-            JobPlatformId = "plat-001", // Placeholder - would be looked up or created
+            CompanyId = new Guid("11111111-1111-1111-1111-111111111111"), // Placeholder - would be looked up or created
+            JobPlatformId = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"), // Placeholder - would be looked up or created
             JobTitle = updateDto.JobTitle,
             Status = updateDto.Status,
             Notes = updateDto.Notes

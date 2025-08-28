@@ -40,9 +40,9 @@ public class JobApplicationRepository : IJobApplicationRepository
     /// </summary>
     /// <param name="id">The job application ID</param>
     /// <returns>The job application if found, null otherwise</returns>
-    public async Task<JobApplication?> GetByIdAsync(string id)
+    public async Task<JobApplication?> GetByIdAsync(Guid id)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (id == Guid.Empty)
             return null;
 
         return await _context.JobApplications
@@ -62,7 +62,6 @@ public class JobApplicationRepository : IJobApplicationRepository
             throw new ArgumentNullException(nameof(jobApplication));
 
         var now = DateTime.UtcNow;
-        jobApplication.Id = Guid.NewGuid().ToString();
         jobApplication.CreateDate = now;
         jobApplication.ModifiedDate = now;
         jobApplication.IsDeleted = false;
@@ -107,9 +106,9 @@ public class JobApplicationRepository : IJobApplicationRepository
     /// </summary>
     /// <param name="id">The ID of the job application to delete</param>
     /// <returns>True if the operation was successful, false otherwise</returns>
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (id == Guid.Empty)
             return false;
 
         var jobApplication = await _context.JobApplications
@@ -130,9 +129,9 @@ public class JobApplicationRepository : IJobApplicationRepository
     /// </summary>
     /// <param name="id">The job application ID</param>
     /// <returns>True if the job application exists and is not deleted, false otherwise</returns>
-    public async Task<bool> ExistsAsync(string id)
+    public async Task<bool> ExistsAsync(Guid id)
     {
-        if (string.IsNullOrWhiteSpace(id))
+        if (id == Guid.Empty)
             return false;
 
         return await _context.JobApplications

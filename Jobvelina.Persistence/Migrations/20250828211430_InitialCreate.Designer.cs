@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Jobvelina.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250827144936_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20250828211430_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,9 +27,10 @@ namespace Jobvelina.Persistence.Migrations
 
             modelBuilder.Entity("Jobvelina.Core.Entities.Company", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -63,14 +64,13 @@ namespace Jobvelina.Persistence.Migrations
 
             modelBuilder.Entity("Jobvelina.Core.Entities.JobApplication", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
-                    b.Property<string>("CompanyId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
@@ -78,10 +78,8 @@ namespace Jobvelina.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("JobPlatformId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<Guid>("JobPlatformId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("JobTitle")
                         .IsRequired()
@@ -115,9 +113,10 @@ namespace Jobvelina.Persistence.Migrations
 
             modelBuilder.Entity("Jobvelina.Core.Entities.JobPlatform", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");

@@ -18,7 +18,7 @@ public interface IJobApplicationRepository
     /// </summary>
     /// <param name="id">The job application ID</param>
     /// <returns>The job application if found, null otherwise</returns>
-    Task<JobApplication?> GetByIdAsync(string id);
+    Task<JobApplication?> GetByIdAsync(Guid id);
 
     /// <summary>
     /// Creates a new job application
@@ -39,12 +39,12 @@ public interface IJobApplicationRepository
     /// </summary>
     /// <param name="id">The ID of the job application to delete</param>
     /// <returns>True if the operation was successful, false otherwise</returns>
-    Task<bool> DeleteAsync(string id);
+    Task<bool> DeleteAsync(Guid id);
 
     /// <summary>
     /// Checks if a job application exists and is not deleted
     /// </summary>
     /// <param name="id">The job application ID</param>
     /// <returns>True if the job application exists and is not deleted, false otherwise</returns>
-    Task<bool> ExistsAsync(string id);
+    Task<bool> ExistsAsync(Guid id);
 }

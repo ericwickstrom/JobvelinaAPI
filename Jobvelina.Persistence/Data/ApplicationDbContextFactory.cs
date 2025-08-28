@@ -18,7 +18,7 @@ public class ApplicationDbContextFactory : IDesignTimeDbContextFactory<Applicati
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
         
         // Use the same connection string as defined in appsettings.json
-        optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=JobvelinaDB;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true");
+        optionsBuilder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=JobvelinaDB;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true");
 
         return new ApplicationDbContext(optionsBuilder.Options);
     }

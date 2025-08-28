@@ -11,9 +11,9 @@ namespace Jobvelina.Application.Services;
 /// </summary>
 public class MockJobApplicationService : IJobApplicationRepository
 {
-    private readonly ConcurrentDictionary<string, JobApplication> _jobApplications;
-    private readonly ConcurrentDictionary<string, Company> _companies;
-    private readonly ConcurrentDictionary<string, JobPlatform> _jobPlatforms;
+    private readonly ConcurrentDictionary<Guid, JobApplication> _jobApplications;
+    private readonly ConcurrentDictionary<Guid, Company> _companies;
+    private readonly ConcurrentDictionary<Guid, JobPlatform> _jobPlatforms;
     private readonly object _lockObject = new();
 
     /// <summary>
@@ -21,9 +21,9 @@ public class MockJobApplicationService : IJobApplicationRepository
     /// </summary>
     public MockJobApplicationService()
     {
-        _jobApplications = new ConcurrentDictionary<string, JobApplication>();
-        _companies = new ConcurrentDictionary<string, Company>();
-        _jobPlatforms = new ConcurrentDictionary<string, JobPlatform>();
+        _jobApplications = new ConcurrentDictionary<Guid, JobApplication>();
+        _companies = new ConcurrentDictionary<Guid, Company>();
+        _jobPlatforms = new ConcurrentDictionary<Guid, JobPlatform>();
         SeedData();
     }
 
@@ -46,11 +46,11 @@ public class MockJobApplicationService : IJobApplicationRepository
     /// </summary>
     /// <param name="id">The job application ID</param>
     /// <returns>The job application if found, null otherwise</returns>
-    public async Task<JobApplication?> GetByIdAsync(string id)
+    public async Task<JobApplication?> GetByIdAsync(Guid id)
     {
         await Task.Delay(25); // Simulate async operation
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (id == Guid.Empty)
             return null;
 
         _jobApplications.TryGetValue(id, out var jobApplication);
@@ -72,7 +72,6 @@ public class MockJobApplicationService : IJobApplicationRepository
         lock (_lockObject)
         {
             var now = DateTime.UtcNow;
-            jobApplication.Id = Guid.NewGuid().ToString();
             jobApplication.CreateDate = now;
             jobApplication.ModifiedDate = now;
             jobApplication.IsDeleted = false;
@@ -117,11 +116,11 @@ public class MockJobApplicationService : IJobApplicationRepository
     /// </summary>
     /// <param name="id">The ID of the job application to delete</param>
     /// <returns>True if the operation was successful, false otherwise</returns>
-    public async Task<bool> DeleteAsync(string id)
+    public async Task<bool> DeleteAsync(Guid id)
     {
         await Task.Delay(50); // Simulate async operation
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (id == Guid.Empty)
             return false;
 
         if (!_jobApplications.TryGetValue(id, out var jobApplication) || jobApplication.IsDeleted)
@@ -141,11 +140,11 @@ public class MockJobApplicationService : IJobApplicationRepository
     /// </summary>
     /// <param name="id">The job application ID</param>
     /// <returns>True if the job application exists and is not deleted, false otherwise</returns>
-    public async Task<bool> ExistsAsync(string id)
+    public async Task<bool> ExistsAsync(Guid id)
     {
         await Task.Delay(25); // Simulate async operation
 
-        if (string.IsNullOrWhiteSpace(id))
+        if (id == Guid.Empty)
             return false;
 
         return _jobApplications.TryGetValue(id, out var jobApplication) && !jobApplication.IsDeleted;
@@ -157,11 +156,15 @@ public class MockJobApplicationService : IJobApplicationRepository
     private void SeedData()
     {
         // Seed companies
+        var companyId1 = new Guid("11111111-1111-1111-1111-111111111111");
+        var companyId2 = new Guid("22222222-2222-2222-2222-222222222222");
+        var companyId3 = new Guid("33333333-3333-3333-3333-333333333333");
+        
         var companies = new[]
         {
-            new Company { Id = "comp-001", Name = "Microsoft", Description = "Technology company", Industry = "Technology", CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
-            new Company { Id = "comp-002", Name = "Google", Description = "Search and technology company", Industry = "Technology", CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
-            new Company { Id = "comp-003", Name = "Amazon", Description = "E-commerce and cloud services", Industry = "Technology", CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
+            new Company { Id = companyId1, Name = "Microsoft", Description = "Technology company", Industry = "Technology", CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
+            new Company { Id = companyId2, Name = "Google", Description = "Search and technology company", Industry = "Technology", CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
+            new Company { Id = companyId3, Name = "Amazon", Description = "E-commerce and cloud services", Industry = "Technology", CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
         };
 
         foreach (var company in companies)
@@ -170,11 +173,15 @@ public class MockJobApplicationService : IJobApplicationRepository
         }
 
         // Seed job platforms
+        var platformId1 = new Guid("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        var platformId2 = new Guid("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+        var platformId3 = new Guid("cccccccc-cccc-cccc-cccc-cccccccccccc");
+        
         var platforms = new[]
         {
-            new JobPlatform { Id = "plat-001", Name = "LinkedIn", Description = "Professional networking platform", WebsiteUrl = "https://linkedin.com", IsActive = true, CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
-            new JobPlatform { Id = "plat-002", Name = "Indeed", Description = "Job search platform", WebsiteUrl = "https://indeed.com", IsActive = true, CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
-            new JobPlatform { Id = "plat-003", Name = "Company Website", Description = "Direct application through company website", IsActive = true, CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
+            new JobPlatform { Id = platformId1, Name = "LinkedIn", Description = "Professional networking platform", WebsiteUrl = "https://linkedin.com", IsActive = true, CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
+            new JobPlatform { Id = platformId2, Name = "Indeed", Description = "Job search platform", WebsiteUrl = "https://indeed.com", IsActive = true, CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
+            new JobPlatform { Id = platformId3, Name = "Company Website", Description = "Direct application through company website", IsActive = true, CreateDate = DateTime.UtcNow.AddDays(-100), ModifiedDate = DateTime.UtcNow.AddDays(-100) },
         };
 
         foreach (var platform in platforms)
@@ -187,9 +194,9 @@ public class MockJobApplicationService : IJobApplicationRepository
         {
             new JobApplication
             {
-                Id = "ja-001",
-                CompanyId = "comp-001",
-                JobPlatformId = "plat-001",
+                Id = new Guid("dddddddd-dddd-dddd-dddd-dddddddddddd"),
+                CompanyId = companyId1,
+                JobPlatformId = platformId1,
                 Company = companies[0],
                 JobPlatform = platforms[0],
                 JobTitle = "Senior Software Engineer",
@@ -201,9 +208,9 @@ public class MockJobApplicationService : IJobApplicationRepository
             },
             new JobApplication
             {
-                Id = "ja-002",
-                CompanyId = "comp-002",
-                JobPlatformId = "plat-003",
+                Id = new Guid("eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee"),
+                CompanyId = companyId2,
+                JobPlatformId = platformId3,
                 Company = companies[1],
                 JobPlatform = platforms[2],
                 JobTitle = "Software Developer",
@@ -215,9 +222,9 @@ public class MockJobApplicationService : IJobApplicationRepository
             },
             new JobApplication
             {
-                Id = "ja-003",
-                CompanyId = "comp-003",
-                JobPlatformId = "plat-002",
+                Id = new Guid("ffffffff-ffff-ffff-ffff-ffffffffffff"),
+                CompanyId = companyId3,
+                JobPlatformId = platformId2,
                 Company = companies[2],
                 JobPlatform = platforms[1],
                 JobTitle = "Full Stack Developer",

@@ -8,7 +8,7 @@ public class JobPlatform
     /// <summary>
     /// Unique identifier for the job platform
     /// </summary>
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Name of the job platform

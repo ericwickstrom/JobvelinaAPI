@@ -46,7 +46,7 @@ public class ApplicationDbContext : DbContext
             
             entity.Property(e => e.Id)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasDefaultValueSql("NEWID()");
 
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -78,7 +78,7 @@ public class ApplicationDbContext : DbContext
             
             entity.Property(e => e.Id)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasDefaultValueSql("NEWID()");
 
             entity.Property(e => e.Name)
                 .IsRequired()
@@ -111,15 +111,13 @@ public class ApplicationDbContext : DbContext
             
             entity.Property(e => e.Id)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasDefaultValueSql("NEWID()");
 
             entity.Property(e => e.CompanyId)
-                .IsRequired()
-                .HasMaxLength(50);
+                .IsRequired();
 
             entity.Property(e => e.JobPlatformId)
-                .IsRequired()
-                .HasMaxLength(50);
+                .IsRequired();
 
             entity.Property(e => e.JobTitle)
                 .IsRequired()

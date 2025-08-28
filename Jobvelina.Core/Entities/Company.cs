@@ -8,7 +8,7 @@ public class Company
     /// <summary>
     /// Unique identifier for the company
     /// </summary>
-    public string Id { get; set; } = string.Empty;
+    public Guid Id { get; set; }
 
     /// <summary>
     /// Name of the company
